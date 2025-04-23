@@ -1,0 +1,135 @@
+<div class="order-details-container">
+  <h2>Order Details #{{.Order.ID}}</h2>
+  <p><strong>Customer:</strong> {{.Order.FirstName}} {{.Order.LastName}}</p>
+  <p><strong>Address:</strong> {{.Order.Address}}, {{.Order.City}}</p>
+  <p><strong>Email:</strong> {{.Order.Email}}</p>
+  <p><strong>Phone Number:</strong> {{.Order.Phone}}</p>
+  <p><strong>Notes:</strong> {{.Order.OrderNotes}}</p>
+  <p><strong>Status:</strong> {{.Order.Status}}</p>
+
+  <h3>Products in this order</h3>
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>Product</th>
+      <th>Quantity</th>
+      <th>Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{range .Order.OrderDetails}}
+    <tr>
+      <td>{{.Product.Name}}</td>
+      <td>{{.Quantity}}</td>
+      <td>${{.Price}}</td>
+    </tr>
+    {{end}}
+    </tbody>
+    <tfoot>
+    <tr>
+      <td colspan="2" style="text-align: center; font-weight: bold;">Total</td>
+      <td style="text-align: center;font-weight: bold; color: #e74c3c;">${{.Total}}</td>
+    </tr>
+    </tfoot>
+  </table>
+
+  <a href="/auth/order-history" class="btn btn-primary">Back to Orders</a>
+</div>
+
+<style>
+  .table tfoot td {
+    background-color: #f9f9f9;
+    font-size: 16px;
+    border-top: 2px solid #ccc;
+  }
+
+  .order-details-container {
+    background: #fff;
+    padding: 30px;
+    margin: 30px auto;
+    max-width:100%;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 20px;
+  }
+
+  .order-details-container h2 {
+    font-size: 28px;
+    color: #3c8dbc;
+    margin-bottom: 20px;
+    font-weight: 700;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+  }
+
+  .order-details-container p {
+    font-size: 16px;
+    margin: 8px 0;
+    color: #333;
+  }
+
+  .order-details-container p strong {
+    width: 140px;
+    display: inline-block;
+    color: #555;
+  }
+
+  .order-details-container h3 {
+    margin-top: 30px;
+    font-size: 22px;
+    font-weight: 600;
+    color: #3c8dbc;
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 8px;
+  }
+
+  .table {
+    margin-top: 20px;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fdfdfd;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+    overflow: hidden;
+  }
+
+  .table thead {
+    background-color: #3c8dbc;
+    color: white;
+    font-weight: 600;
+  }
+
+  .table thead th {
+    padding: 14px;
+    text-align: center;
+    font-size: 15px;
+    border-right: 1px solid #ffffff25;
+  }
+
+  .table tbody td {
+    padding: 14px;
+    text-align: center;
+    font-size: 15px;
+    color: #333;
+    border-top: 1px solid #eee;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 10px 20px;
+    background-color: #3c8dbc;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #2e7aa1;
+  }
+</style>

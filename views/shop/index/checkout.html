@@ -1,0 +1,402 @@
+<div class="single-product-area">
+    <div class="zigzag-bottom"></div>
+    <div class="container">
+        <div class="container-fluid checkout-container">
+            <h2>Checkout</h2>
+            <div class="col-md-7">
+                <form enctype="multipart/form-data" action="#" class="checkout" method="post" name="checkout">
+                    <div id="customer_details" class="col2-set">
+                        <div class="col-1">
+                            <div class="woocommerce-billing-fields">
+                                <h3>Billing Details</h3>
+
+                                <p class="form-row form-row-first">
+                                    <label for="billing_first_name">First Name <abbr title="required">*</abbr></label>
+                                    <input type="text" id="billing_first_name" name="billing_first_name" class="input-text">
+                                </p>
+
+                                <p class="form-row form-row-last">
+                                    <label for="billing_last_name">Last Name <abbr title="required">*</abbr></label>
+                                    <input type="text" id="billing_last_name" name="billing_last_name" class="input-text">
+                                </p>
+
+                                <div class="clear"></div>
+
+                                <p class="form-row form-row-wide">
+                                    <label for="billing_email">Email Address <abbr title="required">*</abbr></label>
+                                    <input type="email" id="billing_email" name="billing_email" class="input-text">
+                                </p>
+
+                                <p class="form-row form-row-wide">
+                                    <label for="billing_city">Town / City <abbr title="required">*</abbr></label>
+                                    <input type="text" id="billing_city" name="billing_city" class="input-text">
+                                </p>
+
+                                <p class="form-row form-row-first">
+                                    <label for="billing_state">County</label>
+                                    <input type="text" id="billing_state" name="billing_state" class="input-text">
+                                </p>
+
+                                <p class="form-row form-row-last">
+                                    <label for="billing_postcode">Postcode <abbr title="required">*</abbr></label>
+                                    <input type="text" id="billing_postcode" name="billing_postcode" class="input-text">
+                                </p>
+
+                                <div class="clear"></div>
+
+                                <p class="form-row form-row-last">
+                                    <label for="billing_phone">Phone <abbr title="required">*</abbr></label>
+                                    <input type="text" id="billing_phone" name="billing_phone" class="input-text">
+                                </p>
+
+                                <p class="form-row notes">
+                                    <label for="order_comments">Order Notes</label>
+                                    <textarea id="order_comments" name="order_comments" rows="2" placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
+                                </p>
+
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-md-5">
+                <div class="checkout-summary-box" id="order_review">
+                    <h3 class="text-center">Your order</h3>
+                    <table class="shop_table table table-bordered text-center">
+                        <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{ range .CartItems }}
+                        <tr>
+                            <td><img src="{{ .ImageURL }}" alt="{{ .ProductName }}" width="50"></td>
+                            <td>{{ .ProductName }}</td>
+                            <td>${{ .Price }}</td>
+                            <td>{{ .Quantity }}</td>
+                            <td>${{ .Total }}</td>
+                        </tr>
+                        {{ end }}
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th colspan="4">Total</th>
+                            <td>${{ .TotalAmount }}</td>
+                        </tr>
+                        </tfoot>
+                    </table>
+
+                    <div id="payment" class="payment-section">
+                        <ul class="payment_methods">
+                            <li>
+                                <input type="radio" value="cash" name="payment_method" id="payment_method_cash">
+                                <label for="payment_method_cash">Cash</label>
+                            </li>
+                            <li>
+                                <input type="radio" value="bacs" name="payment_method" id="payment_method_bacs">
+                                <label for="payment_method_bacs">Direct Bank Transfer</label>
+                                <div id="bank_transfer_qr" style="display:none;">
+                                    <h4>Bank Transfer QR Code:</h4>
+                                    <img src="/assets/img/qr.jpg" alt="QR Code" style="max-width: 200px;">
+                                    <p>Scan this code to complete the transfer.</p>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <div class="form-row text-center mt-4">
+                            <button type="button" id="place_order" class="button alt">Place Order</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkout-info-box mt-4">
+                    <h4>Why Choose Us?</h4>
+                    <ul class="info-list">
+                        <li>
+                            <span class="info-icon">🚚</span>
+                            <div>
+                                <strong>Free Shipping</strong><br>
+                                On orders over 500,000 VND
+                            </div>
+                        </li>
+                        <li>
+                            <span class="info-icon">💳</span>
+                            <div>
+                                <strong>Secure Payment</strong><br>
+                                Protected with SSL encryption
+                            </div>
+                        </li>
+                        <li>
+                            <span class="info-icon">🔄</span>
+                            <div>
+                                <strong>Easy Returns</strong><br>
+                                Within 7 days of delivery
+                            </div>
+                        </li>
+                        <li>
+                            <span class="info-icon">📞</span>
+                            <div>
+                                <strong>24/7 Support</strong><br>
+                                Call 1800 1234 for free consultation
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('input[name="payment_method"]').change(function () {
+                if ($(this).val() === 'bacs') {
+                    $('#bank_transfer_qr').slideDown();
+                } else {
+                    $('#bank_transfer_qr').slideUp();
+                }
+            });
+
+            $("#place_order").click(function (e) {
+                e.preventDefault();
+                let formData = {
+                    billing_first_name: $("#billing_first_name").val(),
+                    billing_last_name: $("#billing_last_name").val(),
+                    billing_city: $("#billing_city").val(),
+                    billing_email: $("#billing_email").val(),
+                    billing_phone: $("#billing_phone").val(),
+                    payment_method: $("input[name='payment_method']:checked").val(),
+                    order_comments: $("#order_comments").val()
+                };
+
+                for (let key in formData) {
+                    if (!formData[key]) {
+                        let fieldName = key.replace(/_/g, " ");
+                        fieldName = fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
+                        alert("Please fill in all the billing information.");
+                        return;
+                    }
+                }
+
+                $.ajax({
+                    url: "/auth/checkout",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(formData),
+                    success: function (response) {
+                        if (response.success) {
+                            alert("Order placed successfully!");
+                            window.location.href = "/auth/home";
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function () {
+                        alert("Error processing payment!");
+                    }
+                });
+            });
+        });
+    </script>
+
+    <style>
+        .container{
+            width: 100%;
+        }
+        .checkout-summary-box {
+            background: #fefefe;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+            margin-top: 20px;
+        }
+
+        .checkout-summary-box h3 {
+            font-size: 24px;
+            color: #3c8dbc;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .payment-section h4 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .woocommerce-billing-fields {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        .woocommerce-billing-fields h3 {
+            margin-bottom: 25px;
+            font-size: 24px;
+            font-weight: 600;
+            color: #214a88;
+            border-bottom: 2px solid #214a88;
+            padding-bottom: 10px;
+        }
+
+        .form-row {
+            margin-bottom: 20px;
+        }
+
+        .form-row label {
+            font-weight: 500;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .form-row input, .form-row textarea {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+
+        .form-row input:focus, .form-row textarea:focus {
+            outline: none;
+            border-color: #214a88;
+            box-shadow: 0 0 0 2px rgba(33, 74, 136, 0.1);
+        }
+
+        .shop_table {
+            margin-top: 30px;
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        .shop_table th, .shop_table td {
+            padding: 15px;
+            border: 1px solid #eaeaea;
+            font-size: 16px;
+        }
+
+        .shop_table th {
+            background-color: #f5f5f5;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .payment_methods {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        .payment_methods li {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .payment_methods input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .payment_box {
+            background: #f1f1f1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        #place_order {
+            background-color: #214a88;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out;
+            width: 300px;
+            margin: 0 auto;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #place_order:hover {
+            background-color: #163364;
+        }
+
+        #place_order:active {
+            transform: scale(0.98);
+        }
+
+        #order_review_heading {
+            margin: 50px 0 20px;
+            font-weight: bold;
+            font-size: 28px;
+            color: #214a88;
+        }
+        .checkout-info-box {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        .checkout-info-box h4 {
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-list li {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .info-icon {
+            font-size: 24px;
+            margin-right: 10px;
+            color: #2c3e50;
+        }
+        .checkout-summary-box h3 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #3c8dbc;
+            border-bottom: 2px solid #214a88;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        .checkout-container {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 30px 20px;
+            background-color: #ffffff;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+        }
+        .checkout-container h2{
+                font-size: 28px;
+                color: #3c8dbc;
+                margin-bottom: 20px;
+                font-weight: 700;
+                border-bottom: 2px solid #eee;
+                padding-bottom: 10px;
+        }
+
+    </style>

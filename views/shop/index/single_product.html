@@ -1,0 +1,225 @@
+<div class="single-product-area">
+    <div class="zigzag-bottom"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="product-content-right">
+                    <div class="product-breadcrumb">
+                        <a href="/auth/shop_products">Shop</a> > <a href="/auth/shop_products">{{.Product.Category}}</a> > <a href="#">{{.Product.Name}}</a>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="product-images">
+                                <div class="product-main-img">
+                                    <img src="{{.Product.ImageURL}}" alt="{{.Product.Name}}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="product-inner">
+                                <h2 class="product-name">{{.Product.Name}}</h2>
+                                <div class="product-inner-price">
+                                    <ins>${{.Product.Price}}</ins>
+                                    {{if .Product.OldPrice}}<del>${{.Product.OldPrice}}</del>{{end}}
+                                </div>
+
+                                <input type="hidden" id="productID" value="{{.Product.ID}}">
+                                <input type="hidden" id="productPrice" value="{{.Product.Price}}">
+                                <div class="quantity">
+                                    <input type="number" id="productQuantity" value="1" min="1" step="1" required>
+                                </div>
+                                <button class="add_to_cart_button">Add to cart</button>
+                                <p><strong>Stock:</strong>
+                                    {{if gt .Product.Stock 0}}
+                                    {{.Product.Stock}} items left
+                                    {{else}}
+                                    <span style="color:red;">Out of stock</span>
+                                    {{end}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-description">
+                        <h3>Product Description</h3>
+                        <p>{{.Product.Description}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        console.log("🛠 Script Loaded!");
+
+        $(".add_to_cart_button").click(function () {
+            let productID = parseInt($("#productID").val());
+            let productQuantity = parseInt($("#productQuantity").val());
+
+            if (isNaN(productID) || isNaN(productQuantity) || productQuantity < 1) {
+                alert("⚠️ Lỗi: Dữ liệu sản phẩm không hợp lệ!");
+                return;
+            }
+
+            console.log("📤 Sending Request:", {action: "add", productID, productQuantity});
+
+            $.ajax({
+                url: "/auth/add-to-cart",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    action: "add",
+                    product_id: productID,
+                    quantity: productQuantity
+                }),
+                success: function (data) {
+                    if (data.success) {
+                        alert("✅ " + data.message);
+                    } else {
+                        alert("❌ " + data.message);
+                        console.warn("🚨 Server Response:", data);
+                    }
+                },
+                error: function (xhr) {
+                    console.error("❌ Lỗi:", xhr.responseText);
+                    alert("⚠️ Có lỗi xảy ra, vui lòng thử lại!");
+                }
+            });
+        });
+    });
+</script>
+<style>
+    .single-product-area {
+        padding: 60px 0;
+        background-color: #f9f9f9;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* Breadcrumb */
+    .product-breadcrumb {
+        font-size: 14px;
+        margin-bottom: 20px;
+        color: #888;
+    }
+
+    .product-breadcrumb a {
+        color: #3c8dbc;
+        text-decoration: none;
+    }
+
+    .product-breadcrumb a:hover {
+        text-decoration: underline;
+    }
+
+    /* Khung tổng thể */
+    .product-content-right {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+        padding: 30px;
+    }
+
+    /* Hình ảnh */
+    .product-images {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .product-main-img img {
+        width: 100%;
+        max-height: 400px;
+        object-fit: contain;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    /* Tên & giá */
+    .product-name {
+        font-size: 28px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    .product-inner-price {
+        font-size: 20px;
+        color: #3c8dbc;
+        margin-bottom: 20px;
+    }
+
+    .product-inner-price del {
+        color: #aaa;
+        margin-left: 10px;
+    }
+
+    /* Input số lượng */
+    .quantity input[type="number"] {
+        width: 80px;
+        padding: 6px 10px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    /* Nút add to cart */
+    .add_to_cart_button {
+        background-color: #3c8dbc;
+        color: white;
+        padding: 10px 25px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .add_to_cart_button:hover {
+        background-color: #2c7aa8;
+    }
+
+    /* Stock */
+    .product-inner p {
+        font-size: 14px;
+        color: #444;
+    }
+
+    /* Mô tả sản phẩm */
+    .product-description {
+        margin-top: 40px;
+    }
+
+    .product-description h3 {
+        font-size: 22px;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .product-description p {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #555;
+    }
+
+    /* Responsive nhỏ */
+    @media (max-width: 768px) {
+        .product-name {
+            font-size: 24px;
+        }
+
+        .product-inner-price {
+            font-size: 18px;
+        }
+
+        .product-description h3 {
+            font-size: 20px;
+        }
+    }
+
+</style>

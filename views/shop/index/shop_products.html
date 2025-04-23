@@ -1,0 +1,227 @@
+<div class="single-product-area">
+  <div class="zigzag-bottom"></div>
+  <div class="container-fluid">
+    <h2>Our Products</h2>
+    <!-- Bộ lọc thể loại và thanh tìm kiếm -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <!-- Thanh tìm kiếm -->
+      <div class="filter-search d-flex align-items-center">
+        <label for="searchInput" class="me-2 mb-0 fw-semibold">Search:</label>
+        <div class="d-flex align-items-center">
+          <input type="text" id="searchInput" name="search" placeholder="Search for products" value="{{.search}}" class="form-control custom-input me-2">
+          <button id="searchButton" class="btn btn-primary custom-btn">Search</button>
+        </div>
+      </div>
+
+      <!-- Bộ lọc thể loại -->
+      <div class="filter-category">
+        <label for="categorySelect">Category:</label>
+        <select id="categorySelect" name="category" class="form-select" style="width: 200px;">
+          <option value="" {{if eq .category ""}}selected{{end}}>All products</option>
+          <option value="phone" {{if eq .category "phone"}}selected{{end}}>Phone</option>
+          <option value="laptop" {{if eq .category "laptop"}}selected{{end}}>Laptop</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      {{range .products}}
+      <div class="col-md-3 col-sm-6 mb-4">
+        <div class="product-box">
+        <div class="single-shop-product border p-3 rounded">
+          <div class="product-upper mb-3">
+            <a href="/auth/product/{{.ID}}">
+              <img src="{{.ImageURL}}" alt="{{.Name}}" class="img-fluid">
+            </a>
+          </div>
+          <h5><a href="/auth/product/{{.ID}}">{{.Name}}</a></h5>
+          <div class="product-carousel-price">
+            <ins>${{.Price}}</ins>
+            {{if .OldPrice}}<del>${{.OldPrice}}</del>{{end}}
+          </div>
+          <!-- Nút thêm vào giỏ hàng -->
+          <button class="add_to_cart_button btn btn-success w-100"
+                  onclick="addToCart({{.ID}}, {{.Price}})">Add to cart</button>
+        </div>
+        </div>
+      </div>
+      {{end}}
+    </div>
+
+    <!-- PHÂN TRANG -->
+    <div class="pagination justify-content-center mt-4">
+      <button id="prevPage" class="btn btn-outline-secondary" {{if eq .currentPage 1}}disabled{{end}}>Prev</button>
+      <span class="mx-2">Page {{.currentPage}} / {{.totalPages}}</span>
+      <button id="nextPage" class="btn btn-outline-secondary" {{if eq .currentPage .totalPages}}disabled{{end}}>Next</button>
+    </div>
+  </div>
+</div>
+
+<!-- Script xử lý bộ lọc & phân trang -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    let currentPage = parseInt("{{.currentPage}}");
+    const totalPages = parseInt("{{.totalPages}}");
+
+    function updateURL(category, page, search) {
+      let url = `/auth/shop_products?category=${category}&page=${page}&search=${search}`;
+      window.location.href = url;
+    }
+
+    // Xử lý lọc thể loại
+    document.getElementById("categorySelect").addEventListener("change", function () {
+      updateURL(this.value, 1, document.getElementById("searchInput").value);
+    });
+
+    // Xử lý thanh tìm kiếm
+    document.getElementById("searchButton").addEventListener("click", updateSearch);
+
+    function updateSearch() {
+      const search = document.getElementById("searchInput").value;
+      updateURL(document.getElementById("categorySelect").value, 1, search);
+    }
+
+    // Xử lý nút chuyển trang
+    document.getElementById("prevPage").addEventListener("click", function () {
+      if (currentPage > 1) {
+        updateURL(document.getElementById("categorySelect").value, currentPage - 1, document.getElementById("searchInput").value);
+      }
+    });
+
+    document.getElementById("nextPage").addEventListener("click", function () {
+      if (currentPage < totalPages) {
+        updateURL(document.getElementById("categorySelect").value, currentPage + 1, document.getElementById("searchInput").value);
+      }
+    });
+  });
+
+  // Hàm xử lý thêm vào giỏ hàng
+  function addToCart(productID, productPrice) {
+    console.log("Adding product to cart:", productID, productPrice); // Debug log
+    fetch('/auth/add-to-cart', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        product_id: productID,
+        price: productPrice,
+        quantity: 1 // Mặc định là 1
+      })
+    })
+            .then(response => response.json())
+            .then(data => {
+              if (data.error) {
+                alert("Lỗi: " + data.error);
+              } else {
+                alert("Product added to cart!");
+              }
+            })
+            .catch(error => {
+              console.error("Lỗi:", error);
+              alert("An error occurred, please try again!");
+            });
+  }
+</script>
+
+<style>
+  .container-fluid{
+    margin-right: 20px;
+    margin-left: 20px;
+    background: #fff;
+    padding: 20px;
+    max-width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  }
+  /* Giao diện box sản phẩm */
+  .product-box {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 15px;
+    background-color: #fff;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    /* Cách nhau giữa các box */
+    margin-bottom: 20px;
+  }
+
+  /* Bỏ hiệu ứng nháy khi hover */
+  .product-box:hover {
+    box-shadow: none;
+    transform: none;
+  }
+
+  .product-name a {
+    color: #333;
+    text-decoration: none;
+  }
+
+  .product-name a:hover {
+    text-decoration: underline;
+    color: #28a745;
+  }
+
+  /* Nút thêm vào giỏ hàng */
+  .add_to_cart_button {
+    border-radius: 25px;
+    transition: background-color 0.3s ease;
+  }
+
+  .add_to_cart_button:hover {
+    background-color: #218838;
+  }
+
+  .filter-search {
+    gap: 10px;
+  }
+
+  .filter-search .custom-input {
+    border-radius: 25px;
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    width: 200px;
+  }
+
+  .filter-search .custom-btn {
+    border-radius: 25px;
+    padding: 8px 20px;
+    white-space: nowrap;
+  }
+
+  .filter-category select {
+    border-radius: 25px;
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+  }
+
+  /* Phân trang */
+  .pagination button {
+    border-radius: 25px;
+    padding: 8px 20px;
+    margin: 0 5px;
+  }
+
+
+  /* Phân trang */
+  .pagination button {
+    border-radius: 25px;
+    padding: 8px 20px;
+    margin: 0 5px;
+  }
+
+  .pagination span {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .container-fluid h2{
+    font-size: 28px;
+    color: #3c8dbc;
+    margin-bottom: 20px;
+    font-weight: 700;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+  }
+</style>

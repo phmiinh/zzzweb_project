@@ -1,0 +1,243 @@
+
+    <div class="zigzag-bottom"></div>
+    <div class="container-fluid">
+        <div class="order-details-container">
+            <h2>Cart</h2>
+            <div class="row justify-content-center">
+                <div class="col-md-12 d-flex justify-content-center gap-5 flex-wrap"> <!-- ✅ Dùng flex để căn giữa 2 bảng -->
+                    <div class="cart-wrapper">
+                    <!-- Bảng sản phẩm -->
+                    <div class="cart-table-wrapper" style="flex: 1 1 600px; max-width: 700px;">
+                        <form method="post" action="#">
+                            <table cellspacing="0" class="shop_table cart mx-auto" style="width: 100%;">
+                                <thead>
+                                <tr>
+                                    <th class="product-remove">&nbsp;</th>
+                                    <th class="product-thumbnail">&nbsp;</th>
+                                    <th class="product-name">Product</th>
+                                    <th class="product-price">Price</th>
+                                    <th class="product-quantity">Quantity</th>
+                                    <th class="product-subtotal">Total</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {{range .CartItems}}
+                                <tr class="cart_item">
+                                    <td class="product-remove">
+                                        <a title="Remove this item" class="remove" href="javascript:void(0);" data-id="{{.ProductID}}">×</a>
+                                    </td>
+                                    <td class="product-thumbnail">
+                                        <a href="/product/{{.ProductID}}">
+                                            <img width="190" height="190" alt="Product Image" class="shop_thumbnail" src="{{.ImageURL}}">
+                                        </a>
+                                    </td>
+                                    <td class="product-name">
+                                        <a href="/product/{{.ProductID}}">{{.ProductName}}</a>
+                                    </td>
+                                    <td class="product-price">
+                                        <span class="amount">${{.Price}}</span>
+                                    </td>
+                                    <td class="product-quantity">
+                                        <div class="quantity buttons_added">
+                                            <a href="javascript:void(0);" class="minus" data-id="{{.ProductID}}">-</a>
+                                            <input type="number" class="input-text qty text" value="{{.Quantity}}" min="1" data-id="{{.ProductID}}">
+                                            <a href="javascript:void(0);" class="plus" data-id="{{.ProductID}}">+</a>
+                                        </div>
+                                    </td>
+                                    <td class="product-subtotal">
+                                        <span class="amount">${{.Total}}</span>
+                                    </td>
+                                </tr>
+                                {{end}}
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+
+                    <!-- Cart Totals -->
+                    <div class="cart_totals" style="min-width: 320px;">
+                        <h2>Cart Totals</h2>
+                        <table cellspacing="0" style="margin: 0 auto;">
+                            <tbody>
+                            <tr class="cart-subtotal">
+                                <th>Cart Subtotal</th>
+                                <td><span class="amount">${{.TotalAmount}}</span></td>
+                            </tr>
+                            <tr class="shipping">
+                                <th>Shipping and Handling</th>
+                                <td>Free Shipping</td>
+                            </tr>
+                            <tr class="order-total">
+                                <th>Order Total</th>
+                                <td><strong><span class="amount">${{.TotalAmount}}</span></strong></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <a href="/auth/checkout" class="btn-checkout mt-3 d-block text-center" style="margin-top: 15px;">Proceed to Checkout</a>
+                    </div>
+</div>
+                </div> <!-- End col-md-12 -->
+            </div> <!-- End row -->
+        </div> <!-- End .order-details-container -->
+    </div> <!-- End container -->
+
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="/assets/js/owl.carousel.min.js"></script>
+<script src="/assets/js/jquery.sticky.js"></script>
+<script src="/assets/js/jquery.easing.1.3.min.js"></script>
+<script src="/assets/js/main.js"></script>
+<style>
+    .container-fluid {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    .cart-wrapper {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        margin-top: 30px;
+    }
+
+    .cart_totals {
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        background-color: #fff;
+    }
+
+    .order-details-container {
+        background: #fff;
+        padding: 30px;
+        /* max-width: 1000px; */  /* ❌ Bỏ dòng này để nội dung không bị bó */
+        width: 100%; /* ✅ Chiếm toàn bộ chiều ngang */
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    }
+    .order-details-container h2{
+        font-size: 28px;
+        color: #3c8dbc;
+        margin-bottom: 20px;
+        font-weight: 700;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 10px;
+    }
+    .cart_totals {
+        width: 100%;
+        max-width: 400px;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .shop_table {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .shop_table th, .shop_table td {
+        padding: 12px;
+        text-align: left;
+    }
+
+    .btn-checkout {
+        background-color: #4CAF50;
+        color: white;
+        font-size: 16px;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        display: inline-block;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .btn-checkout:hover {
+        background-color: #45a049;
+    }
+
+    .cart_totals table {
+        width: 100%;
+    }
+
+    .cart_totals th, .cart_totals td {
+        text-align: left;
+        padding: 10px;
+    }
+
+    .cart_totals th {
+        font-weight: bold;
+    }
+
+    .product-thumbnail img {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        // Xóa sản phẩm
+        $(".remove").click(function () {
+            const productID = $(this).data("id");
+            $.post("/cart/action", { action: "remove", product_id: productID }, function (res) {
+                if (res.success) {
+                    alert("Item removed from cart");
+                    location.reload();
+                } else {
+                    alert(res.error || "Failed to delete item");
+                }
+            });
+        });
+
+        // Tăng số lượng
+        $(".plus").click(function () {
+            const productID = $(this).data("id");
+            const input = $(`.qty[data-id="${productID}"]`);
+            let newQty = parseInt(input.val()) + 1;
+
+            updateQuantity(productID, input, newQty);
+        });
+
+        // Giảm số lượng
+        $(".minus").click(function () {
+            const productID = $(this).data("id");
+            const input = $(`.qty[data-id="${productID}"]`);
+            let newQty = Math.max(1, parseInt(input.val()) - 1);
+
+            updateQuantity(productID, input, newQty);
+        });
+
+        // Nhập số lượng trực tiếp
+        $(".qty").change(function () {
+            const productID = $(this).data("id");
+            const input = $(this);
+            let newQty = Math.max(1, parseInt(input.val()) || 1);
+
+            updateQuantity(productID, input, newQty);
+        });
+
+        // Hàm cập nhật số lượng
+        function updateQuantity(productID, input, quantity) {
+            $.post("/cart/action", { action: "update", product_id: productID, quantity: quantity }, function (res) {
+                if (res.success) {
+                    location.reload();
+                } else if (res.maxQuantity !== undefined) {
+                    alert(res.maxQuantity + " items left");
+                    input.val(res.maxQuantity);
+                } else {
+                    alert(res.error || "Failed to update item!");
+                }
+            });
+        }
+    });
+
+</script>

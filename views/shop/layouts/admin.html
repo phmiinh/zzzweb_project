@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Title}}</title>
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/css/admin.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+
+<div class="admin-container">
+    <div class="sidebar">
+        <ul>
+            <li><a href="/admin/users"><i class="fa fa-users"></i> Users</a></li>
+            <li><a href="/admin/orders"><i class="fa fa-list"></i> Orders</a></li>
+            <li><a href="/auth/logout"><i class="fa fa-sign-out"></i> Log out</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <h1>{{.Title}}</h1>
+        {{embed}}
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+    $(document).ready(function () {
+        $(".sidebar ul li a").each(function () {
+            if (window.location.pathname === $(this).attr("href")) {
+                $(this).parent().addClass("active");
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

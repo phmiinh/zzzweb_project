@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shop - Zzz</title>
+
+    <!-- Google Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,200,300,700,600' rel='stylesheet'
+          type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,700,300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,100' rel='stylesheet' type='text/css'>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/assets/css/owl.carousel.css">
+    <link rel="stylesheet" href="/assets/style.css">
+    <link rel="stylesheet" href="/assets/css/responsive.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<style>
+    .logo img {
+        width: 127px;
+        height: auto; /* Giữ tỷ lệ chiều cao và chiều rộng */
+    }
+    body {
+        font-family: 'Titillium Web', sans-serif;
+        background-color: #f5f5f7;
+        color: #333;
+    }
+
+    /* Header */
+    .header-area {
+        background-color: #1a1a1a;
+        color: #fff;
+        padding: 10px 0;
+        border-bottom: 2px solid #444;
+    }
+
+    .header-area a {
+        color: #eee;
+        transition: color 0.3s;
+    }
+
+    .header-area a:hover {
+        color: #ffc107;
+    }
+
+    /* Logo và giỏ hàng */
+    .site-branding-area {
+        background: #ffffff;
+        padding: 20px 0;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .shopping-item a {
+        background: #f39c12;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 25px;
+        transition: background 0.3s;
+    }
+
+    .shopping-item a:hover {
+        background: #e67e22;
+    }
+
+    /* Menu chính */
+    .mainmenu-area {
+        background-color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .navbar-nav li a {
+        color: #fff !important;
+        padding: 15px 20px;
+        transition: background 0.3s ease;
+    }
+
+    .navbar-nav li a:hover,
+    .navbar-nav li.active a {
+        background-color: #16a085 !important;
+    }
+
+    /* Footer */
+    .footer-top-area {
+        background: #2c3e50;
+        color: white;
+        padding: 40px 0;
+    }
+
+    .footer-wid-title {
+        color: #f39c12;
+        margin-bottom: 20px;
+    }
+
+    .footer-social a {
+        color: #fff;
+        margin-right: 10px;
+        font-size: 18px;
+        transition: color 0.3s;
+    }
+
+    .footer-social a:hover {
+        color: #f39c12;
+    }
+
+    .footer-bottom-area {
+        background: #1a1a1a;
+        color: #aaa;
+        padding: 15px 0;
+        border-top: 1px solid #444;
+    }
+
+    /* Nút Subscribe */
+    .newsletter-form input[type="submit"] {
+        background: #f39c12;
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        margin-top: 10px;
+        border-radius: 4px;
+        transition: background 0.3s;
+    }
+
+    .newsletter-form input[type="submit"]:hover {
+        background: #e67e22;
+    }
+
+    /* Hiệu ứng chung */
+    a,
+    button,
+    .shopping-item a {
+        transition: all 0.3s ease;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        // Lấy đường dẫn hiện tại của trang web
+        var currentUrl = window.location.pathname;
+
+        // Loại bỏ class "active" khỏi tất cả các mục menu
+        $(".nav li").removeClass("active");
+
+        // Duyệt qua từng mục menu để kiểm tra đường dẫn
+        $(".nav li a").each(function () {
+            var link = $(this).attr("href");
+
+            // Nếu link của menu trùng với đường dẫn hiện tại => thêm class "active"
+            if (currentUrl === link) {
+                $(this).parent().addClass("active");
+            }
+        });
+    });
+</script>
+
+<body>
+
+<!-- Header Area -->
+<div class="header-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="user-menu">
+                    <ul>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-user"></i> My Account <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/auth/account"><i class="fa fa-info-circle"></i> User Information</a></li>
+                                <li><a href="/auth/change-password" id="change-password-btn"><i class="fa fa-key"></i>
+                                    Change Password</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="/auth/cart"><i class="fa fa-shopping-cart"></i> My Cart</a></li>
+                        <li><a href="/auth/checkout"><i class="fa fa-credit-card"></i> Checkout</a></li>
+                        <li><a href="/auth/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="header-right">
+                    <ul class="list-unstyled list-inline">
+                        <li class="dropdown dropdown-small">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#"><span
+                                    class="key">Currency:</span> <span class="value">USD</span> <b
+                                    class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">USD</a></li>
+                                <li><a href="#">INR</a></li>
+                                <li><a href="#">GBP</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="dropdown dropdown-small">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#"><span
+                                    class="key">Language:</span> <span class="value">English</span> <b
+                                    class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">English</a></li>
+                                <li><a href="#">French</a></li>
+                                <li><a href="#">German</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Branding Area -->
+<div class="site-branding-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="logo">
+                    <h1><a href="/auth/home"><img src="/assets/img/logo2.png"></a></h1>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="shopping-item">
+                    <a href="/auth/cart">Cart<i class="fa fa-shopping-cart"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Menu -->
+<div class="mainmenu-area">
+    <div class="container">
+        <div class="row">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/auth/home">Home</a></li>
+                    <li><a href="/auth/shop_products">Shop</a></li>
+                    <li><a href="/auth/cart">Cart</a></li>
+                    <li><a href="/auth/checkout">Checkout</a></li>
+                    <li><a href="/auth/order-history">Order History</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Nội dung chính -->
+<div class="content">
+    {{embed}}
+</div>
+
+<div class="footer-top-area">
+    <div class="zigzag-bottom"></div>
+    <div class="container">
+        <div class="row">
+            <!-- About us -->
+            <div class="col-md-3 col-sm-6">
+                <div class="footer-about-us">
+                    <h2>Z<span>zz</span></h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...</p>
+                    <div class="footer-social">
+                        <a href="https://facebook.com" target="_blank"><i class="fa fa-facebook"></i></a>
+                        <a href="https://twitter.com" target="_blank"><i class="fa fa-twitter"></i></a>
+                        <a href="https://youtube.com" target="_blank"><i class="fa fa-youtube"></i></a>
+                        <a href="https://linkedin.com" target="_blank"><i class="fa fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Navigation -->
+            <div class="col-md-3 col-sm-6">
+                <div class="footer-menu">
+                    <h2 class="footer-wid-title">User Navigation</h2>
+                    <ul>
+                        <li><a href="/auth/account">My account</a></li>
+                        <li><a href="/auth/order-history">Order history</a></li>
+                        <li><a href="/auth/shop_products">Shop</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Categories -->
+            <div class="col-md-3 col-sm-6">
+                <div class="footer-menu">
+                    <h2 class="footer-wid-title">Categories</h2>
+                    <ul>
+                        <li><a href="/auth/shop_products?category=phone">Phone</a></li>
+                        <li><a href="/auth/shop_products?category=laptop">Laptop</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Newsletter (có thể giữ lại nếu cần sau này) -->
+            <div class="col-md-3 col-sm-6">
+                <div class="footer-newsletter">
+                    <h2 class="footer-wid-title">Newsletter</h2>
+                    <p>Sign up to our newsletter and get exclusive deals straight to your inbox!</p>
+                    <div class="newsletter-form">
+                        <form action="#" method="post">
+                            <input type="email" placeholder="Type your email">
+                            <input type="submit" value="Subscribe">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> <!-- End footer top area -->
+
+<div class="footer-bottom-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="copyright">
+                    <p>&copy; 2025 uCommerce. All Rights Reserved. <a href="#">yourwebsite.com</a></p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="footer-card-icon">
+                    <i class="fa fa-cc-discover"></i>
+                    <i class="fa fa-cc-mastercard"></i>
+                    <i class="fa fa-cc-paypal"></i>
+                    <i class="fa fa-cc-visa"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> <!-- End footer bottom area -->
+
+<!-- Bootstrap và jQuery -->
+<!--<script src="/assets/js/jquery.min.js"></script>-->
+<!--<script src="/assets/js/bootstrap.min.js"></script>-->
+<script>
+    $(document).ready(function () {
+        $(".dropdown-toggle").click(function (e) {
+            e.preventDefault(); // Ngăn chặn hành vi mặc định của thẻ <a>
+
+            var $menu = $(this).next(".dropdown-menu"); // Lấy menu kế tiếp
+
+            $(".dropdown-menu").not($menu).slideUp(200); // Đóng tất cả dropdown khác
+
+            $menu.slideToggle(200); // Hiện hoặc ẩn dropdown được click vào
+        });
+
+        $(document).click(function (e) {
+            if (!$(e.target).closest(".dropdown").length) {
+                $(".dropdown-menu").slideUp(200); // Nếu click ra ngoài, đóng tất cả dropdown
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
