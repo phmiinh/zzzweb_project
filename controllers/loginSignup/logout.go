@@ -1,4 +1,4 @@
-package controllers
+package loginSignup
 
 import (
 	"github.com/gofiber/fiber/v2"

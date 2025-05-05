@@ -1,15 +1,19 @@
 package routes
 
 import (
-	"Zzz_project/controllers"
+	"Zzz_project/controllers/adminInterface"
+	"Zzz_project/controllers/loginSignup"
+	"Zzz_project/controllers/userInterface"
 	"github.com/gofiber/fiber/v2"
 	"strings"
 )
 
 func SetupRoutes(app *fiber.App) {
+	auth := app.Group("/auth")
+	admin := app.Group("/admin")
 
 	authMiddleware := func(c *fiber.Ctx) error {
-		sess, err := controllers.Store.Get(c)
+		sess, err := loginSignup.Store.Get(c)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString("Session error")
 		}
@@ -27,72 +31,84 @@ func SetupRoutes(app *fiber.App) {
 		return c.Next()
 	}
 
-	index := func(c *fiber.Ctx) error {
-		return c.Render("index/home", fiber.Map{
-			"Title": "Home",
-		}, "layouts/main")
-	}
+	auth.Get("/login", loginSignup.GetLogin)
 
-	//auth := app.Group("/auth")
-	//admin := app.Group("/admin")
-	//order := admin.Group("/order")
-	//
-	//order.Get("", index)
-	//order.Post("", index)
-	//order.Get("/:id", index)
-	//order.Put("/:id", index)
-	//order.Delete("/:id", index)
+	auth.Post("/login", loginSignup.LoginHandler)
 
-	app.Get("/auth/login", controllers.GetLogin)
-
-	app.Post("/auth/login", controllers.LoginHandler)
-
-	app.Get("/auth/signup", func(c *fiber.Ctx) error {
+	auth.Get("/signup", func(c *fiber.Ctx) error {
 		return c.Render("shop/login_signup", nil)
 	})
 
-	app.Post("/auth/signup", controllers.RegisterHandler)
+	auth.Post("/signup", loginSignup.RegisterHandler)
 
-	app.Get("/auth/home", authMiddleware, index)
+	auth.Get("/home", authMiddleware, userInterface.HomePage)
 
-	app.Get("auth/logout", controllers.LogoutHandler)
+	auth.Get("/logout", loginSignup.LogoutHandler)
 
-	app.Get("/auth/account", controllers.AccountHandler)
+	auth.Get("/account", userInterface.AccountHandler)
 
-	app.Post("/auth/account/update", controllers.UpdateAccountHandler)
+	auth.Post("/account/update", userInterface.UpdateAccountHandler)
 
-	app.Get("/auth/change-password", controllers.ChangePasswordViewHandler)
+	auth.Get("/change-password", userInterface.ChangePasswordViewHandler)
 
-	app.Post("/auth/change-password", controllers.ChangePasswordHandler)
+	auth.Post("/change-password", userInterface.ChangePasswordHandler)
 
-	app.Get("/auth/shop_products", authMiddleware, controllers.GetProducts)
+	auth.Get("/shop_products", authMiddleware, userInterface.GetProducts)
 
-	app.Get("/auth/product/:id", authMiddleware, controllers.GetSingleProduct)
+	auth.Get("/product/:id", authMiddleware, userInterface.GetSingleProduct)
 
-	app.Post("/auth/add-to-cart", authMiddleware, controllers.AddToCart)
+	auth.Post("/add-to-cart", authMiddleware, userInterface.AddToCart)
 
-	app.Get("/auth/cart", authMiddleware, controllers.CartHandler)
+	auth.Get("/cart", authMiddleware, userInterface.CartHandler)
 
-	app.Post("/cart/action", authMiddleware, controllers.CartFunc)
+	auth.Post("/cart/action", authMiddleware, userInterface.CartFunc)
 
-	app.Get("/auth/checkout", authMiddleware, controllers.CheckoutPage)
+	auth.Get("/checkout", authMiddleware, userInterface.CheckoutPage)
 
-	app.Post("/auth/checkout", authMiddleware, controllers.ProcessCheckout)
+	auth.Post("/checkout", authMiddleware, userInterface.ProcessCheckout)
 
-	app.Get("/admin/dashboard", authMiddleware, controllers.AdminDashboard)
+	auth.Get("/order-history", authMiddleware, userInterface.OrderHistory)
 
-	app.Get("/admin/users", authMiddleware, controllers.AdminUsersHandler)
+	auth.Get("/order/:id", authMiddleware, userInterface.OrderDetails)
 
-	app.Post("/admin/users/update-role", authMiddleware, controllers.UpdateUserRole)
+	admin.Get("/dashboard", authMiddleware, adminInterface.AdminDashboard)
 
-	app.Post("/admin/users/delete", authMiddleware, controllers.DeleteUser)
+	admin.Get("/users", authMiddleware, adminInterface.UsersList)
 
-	app.Get("/admin/orders", authMiddleware, controllers.AdminOrdersHandler)
+	admin.Get("/users/:id", authMiddleware, adminInterface.UserDetail)
 
-	app.Get("/admin/orders/:id", authMiddleware, controllers.AdminOrderDetailHandler)
+	admin.Post("/users/:id/change-role", authMiddleware, adminInterface.ChangeUserRole)
 
-	app.Get("/auth/order-history", authMiddleware, controllers.OrderHistory)
+	admin.Post("/users/:id/delete", authMiddleware, adminInterface.DeleteUser)
 
-	app.Get("/auth/order/:id", authMiddleware, controllers.OrderDetails)
+	admin.Post("/users/edit/:id", authMiddleware, adminInterface.UpdateUser)
+
+	admin.Get("/products", authMiddleware, adminInterface.ProductsList)
+
+	admin.Get("/products/:id", authMiddleware, adminInterface.ProductDetail)
+
+	admin.Post("/products/edit/:id", authMiddleware, adminInterface.UpdateProduct)
+
+	admin.Post("/products/delete/:id", authMiddleware, adminInterface.DeleteProduct)
+
+	admin.Get("/product/add", authMiddleware, adminInterface.ShowAddProductForm)
+
+	admin.Post("/product/add", authMiddleware, adminInterface.AddProduct)
+
+	admin.Get("/orders", authMiddleware, adminInterface.OrdersList)
+
+	admin.Get("/orders/:id", authMiddleware, adminInterface.OrderDetail)
+
+	admin.Post("/orders/edit/:id", authMiddleware, adminInterface.UpdateOrder)
+
+	admin.Delete("/orders/delete/:id", authMiddleware, adminInterface.DeleteOrder)
+
+	admin.Get("/banners", authMiddleware, adminInterface.ListBanners)
+
+	admin.Post("/banners/create", authMiddleware, adminInterface.CreateBanner)
+
+	admin.Post("/banners/update/:id", authMiddleware, adminInterface.UpdateBanner)
+
+	admin.Delete("/banners/delete/:id", authMiddleware, adminInterface.DeleteBanner)
 
 }

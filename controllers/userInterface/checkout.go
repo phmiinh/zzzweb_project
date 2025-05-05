@@ -1,13 +1,14 @@
-package controllers
+package userInterface
 
 import (
+	"Zzz_project/controllers/loginSignup"
 	"Zzz_project/models"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
 func CheckoutPage(c *fiber.Ctx) error {
-	sess, err := Store.Get(c)
+	sess, err := loginSignup.Store.Get(c)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Session error"})
 	}
@@ -44,7 +45,7 @@ func CheckoutPage(c *fiber.Ctx) error {
 	}, "layouts/main")
 }
 func ProcessCheckout(c *fiber.Ctx) error {
-	sess, err := Store.Get(c)
+	sess, err := loginSignup.Store.Get(c)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Session error"})
 	}

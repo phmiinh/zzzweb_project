@@ -1,4 +1,4 @@
-package controllers
+package loginSignup
 
 import (
 	"Zzz_project/models"

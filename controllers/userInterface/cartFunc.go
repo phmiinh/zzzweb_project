@@ -1,6 +1,7 @@
-package controllers
+package userInterface
 
 import (
+	"Zzz_project/controllers/loginSignup"
 	"Zzz_project/models"
 	"github.com/gofiber/fiber/v2"
 	"strconv"
@@ -9,7 +10,7 @@ import (
 func CartFunc(c *fiber.Ctx) error {
 	var DB = models.DB
 	// Lấy session
-	sess, err := Store.Get(c)
+	sess, err := loginSignup.Store.Get(c)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"success": false,

@@ -1,0 +1,66 @@
+<div class="container mt-5">
+    <div class="card-header bg-info text-white rounded-top-4 d-flex align-items-center">
+        <h4 class="mb-0">Products List</h4>
+        <a href="/admin/product/add" class="btn btn-primary ms-auto">+ Add New Product</a>
+    </div>
+    <table class="table table-bordered table-hover rounded-bottom-4 overflow-hidden shadow">
+        <thead class="table-primary">
+        <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Old Price</th>
+            <th>Stock</th>
+            <th>Category</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .Products}}
+        <tr>
+            <td>{{.ID}}</td>
+            <td><img src="{{.ImageURL}}" alt="{{.Name}}" style="width: 80px; height: 80px; object-fit: cover;"></td>
+            <td>{{.Name}}</td>
+            <td>${{printf "%.2f" .Price}}</td>
+            <td>${{printf "%.2f" .OldPrice}}</td>
+            <td>{{.Stock}}</td>
+            <td>{{.Category}}</td>
+            <td>
+                <a href="/admin/products/{{.ID}}" class="btn btn-info btn-sm">View</a>
+                <button class="btn btn-sm btn-danger rounded-pill" onclick="openDeleteProductModal({{ .ID }}, '{{ .Name }}')">🗑 Delete</button>
+            </td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function openDeleteProductModal(productId, productName) {
+        document.getElementById("deleteProductName").innerText = productName;
+        const form = document.getElementById("deleteProductForm");
+        form.action = `/admin/products/delete/${productId}`;
+        new bootstrap.Modal(document.getElementById('deleteProductModal')).show();
+    }
+</script>
+
+<div class="modal fade" id="deleteProductModal" tabindex="-1" aria-labelledby="deleteProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" id="deleteProductForm">
+            <div class="modal-content rounded-3">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteProductModalLabel">Confirm to delete product</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure to delete the product <strong id="deleteProductName"></strong>?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger rounded-pill">Delete</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

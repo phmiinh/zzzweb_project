@@ -1,4 +1,4 @@
-package controllers
+package userInterface
 
 import (
 	"github.com/go-playground/validator/v10"

@@ -1,0 +1,63 @@
+<!-- Posts -->
+<section id="posts">
+    <div class="container">
+        <div class="row">
+
+            <!-- Sản phẩm -->
+            <div class="col-md-3">
+                <div class="card text-center bg-info text-white mb-3">
+                    <div class="card-body">
+                        <h3>Products</h3>
+                        <h4 class="display-4">
+                            <i class="fas fa-boxes mr-3"></i><span style="color: goldenrod">{{.ProductCount}}</span>
+                        </h4>
+                        <a href="/admin/products" class="btn btn-outline-light btn-sm">View</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Khách hàng -->
+            <div class="col-md-3">
+                <div class="card text-center bg-success text-white mb-3">
+                    <div class="card-body">
+                        <h3>Users</h3>
+                        <h4 class="display-4">
+                            <i class="fas fa-users mr-3"></i><span style="color: goldenrod">{{.UserCount}}</span>
+                        </h4>
+                        <a href="/admin/users" class="btn btn-outline-light btn-sm">View</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Đơn hàng -->
+            <div class="col-md-3">
+                <div class="card text-center bg-danger text-white mb-3">
+                    <div class="card-body">
+                        <h3>Orders</h3>
+                        <h4 class="display-4">
+                            <i class="fas fa-receipt mr-3"></i><span style="color: goldenrod">{{.OrderCount}}</span>
+                        </h4>
+                        <a href="/admin/orders" class="btn btn-outline-light btn-sm">View</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Banner -->
+            <div class="col-md-3">
+                <div class="card text-center bg-success text-white mb-3">
+                    <div class="card-body">
+                        <h3>Banners</h3>
+                        <h4 class="display-4">
+                            <i class="fas fa-users mr-3"></i><span style="color: goldenrod">{{.BannerCount}}</span>
+                        </h4>
+                        <a href="/admin/banners" class="btn btn-outline-light btn-sm">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    
+</style>

@@ -1,4 +1,4 @@
-package controllers
+package loginSignup
 
 import (
 	"golang.org/x/crypto/bcrypt"

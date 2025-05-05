@@ -1,0 +1,65 @@
+<div class="container mt-5">
+  <div class="card shadow rounded-4">
+    <div class="card-header bg-info text-white rounded-top-4">
+      <h4>User Detail</h4>
+    </div>
+    <div class="card-body">
+      <p><strong>ID:</strong> {{ .User.ID }}</p>
+      <p><strong>Username:</strong> {{ .User.Username }}</p>
+      <p><strong>Email:</strong> {{ .User.Email }}</p>
+      <p><strong>Address:</strong> {{ .User.Address }}</p>
+      <p><strong>Birthdate:</strong> {{ .User.Birthdate }}</p>
+      <p><strong>Role:</strong> {{ .User.Role }}</p>
+    </div>
+    <div class="d-flex justify-content-end mt-3">
+      <button class="btn btn-primary me-2" onclick="toggleEdit()">Edit</button>
+      <a href="/admin/users" class="btn btn-secondary">Back</a>
+    </div>
+    <div class="editForm">
+      <form id="editForm" method="POST" action="/admin/users/edit/{{.User.ID}}" class="mt-4 d-none">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label>Email</label>
+            <input type="email" name="email" class="form-control" value="{{.User.Email}}" required>
+          </div>
+          <div class="col-md-6">
+            <label>Username</label>
+            <input type="text" name="username" class="form-control" value="{{.User.Username}}" required>
+          </div>
+          <div class="col-md-6">
+            <label>Address</label>
+            <input type="text" name="address" class="form-control" value="{{.User.Address}}" required>
+          </div>
+          <div class="col-md-6">
+            <label>Birthdate</label>
+            <input type="date" name="birthdate" class="form-control" value="{{formatDate .User.Birthdate}}" required>
+          </div>
+          <div class="col-md-6">
+            <label>Role</label>
+            <select name="role" class="form-select">
+              <option value="customer" {{if eq .User.Role "customer"}}selected{{end}}>Customer</option>
+              <option value="admin" {{if eq .User.Role "admin"}}selected{{end}}>Admin</option>
+            </select>
+          </div>
+        </div>
+        <div class="mt-3">
+          <button type="submit" class="btn btn-success">Save change</button>
+        </div>
+      </form>
+    </div>
+    <script>
+      function toggleEdit() {
+        document.getElementById("editForm").classList.toggle("d-none");
+      }
+    </script>
+  </div>
+</div>
+
+<style>
+  .d-flex{
+    margin:20px
+  }
+  .editForm{
+    margin: 20px
+  }
+</style>

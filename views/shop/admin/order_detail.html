@@ -1,0 +1,216 @@
+<div class="container mt-5">
+    <div class="card shadow rounded-4">
+        <div class="card-header bg-info text-white rounded-top-4">
+            <h4>Order Details #{{.Order.ID}}</h4>
+        </div>
+        <div class="card-body">
+
+            <!-- Thông tin đơn hàng -->
+            <p><strong>Customer:</strong> {{.Order.FirstName}} {{.Order.LastName}}</p>
+            <p><strong>Email:</strong> {{.Order.Email}}</p>
+            <p><strong>Address:</strong> {{.Order.Address}}, {{.Order.City}}</p>
+            <p><strong>Phone Number:</strong> {{.Order.Phone}}</p>
+            <p><strong>Notes:</strong> {{.Order.OrderNotes}}</p>
+            <p><strong>Payment Method:</strong> {{.Order.Payment}}</p>
+            <p><strong>Status:</strong> {{.Order.Status}}</p>
+
+            <!-- Bảng sản phẩm (readonly) -->
+            <h3 class="mt-4">Products in this order</h3>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{range .Order.OrderDetails}}
+                <tr>
+                    <td>{{.Product.Name}}</td>
+                    <td>{{.Quantity}}</td>
+                    <td>${{.Price}}</td>
+                </tr>
+                {{end}}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="2" style="text-align: center; font-weight: bold;">Total</td>
+                    <td style="text-align: center; font-weight: bold; color: #e74c3c;">${{printf "%.2f" .TotalFloat}}</td>
+                </tr>
+                </tfoot>
+            </table>
+
+            <!-- Alert lưu thành công -->
+            <div id="successAlert" class="alert alert-success d-none" role="alert">
+                ✅ The order has been successfully updated!
+            </div>
+
+            <!-- Form chỉnh sửa (ẩn ban đầu) -->
+            <div class="editForm">
+                <form id="editForm" method="POST" action="/admin/orders/edit/{{.Order.ID}}" class="mt-4 d-none" onsubmit="return submitForm(event)">
+
+                    <!-- Các trường sửa -->
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label>Shipping Address</label>
+                            <input type="text" name="shipping_address" class="form-control" value="{{printf "%s, %s" .Order.Address .Order.City}}">
+                        </div>
+                        <div class="col-md-6">
+                            <label>Payment Method</label>
+                            <select name="payment_method" class="form-select">
+                                <option value="Cash" {{if eq .Order.Payment "Cash"}}selected{{end}}>Cash</option>
+                                <option value="Bank Transfer" {{if eq .Order.Payment "Bank Transfer"}}selected{{end}}>Bank Transfer</option>
+                                <option value="Credit Card" {{if eq .Order.Payment "Credit Card"}}selected{{end}}>Credit Card</option>
+                                <option value="Momo" {{if eq .Order.Payment "Momo"}}selected{{end}}>Momo</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Status</label>
+                            <select name="status" class="form-select">
+                                <option value="Pending" {{if eq .Order.Status "Pending"}}selected{{end}}>Pending</option>
+                                <option value="Processing" {{if eq .Order.Status "Processing"}}selected{{end}}>Processing</option>
+                                <option value="Shipping" {{if eq .Order.Status "Shipping"}}selected{{end}}>Shipping</option>
+                                <option value="Completed" {{if eq .Order.Status "Completed"}}selected{{end}}>Completed</option>
+                                <option value="Cancelled" {{if eq .Order.Status "Cancelled"}}selected{{end}}>Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Editable products -->
+                    <h4 class="mt-4">Edit Products in Order</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Delete</th>
+                        </tr>
+                        </thead>
+                        <tbody id="productsTable">
+                        {{range .Order.OrderDetails}}
+                        <tr data-id="{{.ID}}">
+                            <td>{{.Product.Name}}</td>
+                            <td>
+                                <input type="number" name="quantities[{{.ID}}]" value="{{.Quantity}}" min="1" class="form-control" required>
+                            </td>
+                            <td>${{.Price}}</td>
+                            <td>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">🗑</button>
+                            </td>
+                        </tr>
+                        {{end}}
+                        </tbody>
+                    </table>
+
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-success">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="d-flex justify-content-end mt-3">
+                <button class="btn btn-primary me-2" onclick="toggleEdit()">Edit</button>
+                <a href="/admin/orders" class="btn btn-secondary me-2">Back</a>
+                <button class="btn btn-danger" onclick="confirmDelete()">Delete Order</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script>
+    function toggleEdit() {
+        document.getElementById("editForm").classList.toggle("d-none");
+    }
+
+    function removeRow(button) {
+        const row = button.closest('tr');
+        const input = row.querySelector('input[name^="quantities["]');
+        if (input) {
+            input.type = "hidden";  // Đổi sang hidden để vẫn submit
+            input.value = 0;         // Đặt số lượng = 0 để server xóa
+        }
+        row.querySelectorAll('td').forEach(td => {
+            td.style.opacity = 0.5; // Làm mờ dòng sản phẩm
+        });
+    }
+
+    async function submitForm(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+
+        // Chuyển dữ liệu sang URLSearchParams để submit đúng kiểu form-urlencoded
+        const payload = new URLSearchParams();
+        for (const [key, value] of formData.entries()) {
+            payload.append(key, value);
+        }
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: payload
+            });
+
+            if (response.ok) {
+                showSuccessAlert();
+                setTimeout(() => {
+                    window.location.reload(true);
+                }, 1500);
+            } else {
+                const res = await response.json();
+                showErrorAlert(res.error || "An error occurred while updating the order!");
+            }
+        } catch (err) {
+            showErrorAlert("Network error! Please try again.");
+        }
+    }
+
+    function showSuccessAlert() {
+        const alert = document.getElementById("successAlert");
+        alert.classList.remove("d-none");
+        setTimeout(() => {
+            alert.classList.add("d-none");
+        }, 1500);
+    }
+
+    function showErrorAlert(message) {
+        alert(message);
+    }
+
+    function confirmDelete() {
+        if (confirm("Are you sure you want to delete this order? This action cannot be undone.")) {
+            fetch("/admin/orders/delete/{{.Order.ID}}", {
+                method: "DELETE",
+            }).then(response => {
+                if (response.ok) {
+                    alert("Order deleted successfully!");
+                    window.location.href = "/admin/orders";
+                } else {
+                    alert("Failed to delete order!");
+                }
+            }).catch(err => {
+                alert("Error occurred while deleting order!");
+            });
+        }
+    }
+</script>
+
+<!-- CSS nhẹ -->
+<style>
+    .d-flex {
+        margin: 20px;
+    }
+    .editForm {
+        margin: 20px;
+    }
+    .alert {
+        margin-top: 20px;
+    }
+</style>

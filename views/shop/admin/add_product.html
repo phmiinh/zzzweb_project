@@ -1,0 +1,49 @@
+<div class="container mt-5">
+    <div class="card rounded-4 shadow-sm">
+
+        <div class="card-header bg-info text-white rounded-top-4 d-flex align-items-center">
+            <h4 class="mb-0">Add New Product</h4>
+        </div>
+
+        <div class="card-body p-4">
+            <form method="POST" action="/admin/product/add" enctype="multipart/form-data">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Name</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Price</label>
+                        <input type="number" step="0.01" name="price" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Old Price</label>
+                        <input type="number" step="0.01" name="old_price" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Stock</label>
+                        <input type="number" name="stock" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Category</label>
+                        <input type="text" name="category" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Upload Image</label>
+                        <input type="file" name="image" class="form-control">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" rows="4" class="form-control"></textarea>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-success">Add Product</button>
+                    <a href="/admin/products" class="btn btn-secondary">Back</a>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

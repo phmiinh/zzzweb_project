@@ -1,4 +1,4 @@
-package controllers
+package userInterface
 
 import (
 	"Zzz_project/models"

@@ -1,6 +1,7 @@
-package controllers
+package userInterface
 
 import (
+	"Zzz_project/controllers/loginSignup"
 	"Zzz_project/models"
 	"github.com/gofiber/fiber/v2"
 	"log"
@@ -20,7 +21,7 @@ func AddToCart(c *fiber.Ctx) error {
 	}
 
 	// Lấy ID người dùng từ session
-	sess, err := Store.Get(c)
+	sess, err := loginSignup.Store.Get(c)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Lỗi session!"})
 	}

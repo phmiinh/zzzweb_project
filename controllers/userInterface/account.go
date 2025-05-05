@@ -1,12 +1,14 @@
-package controllers
+package userInterface
 
 import (
+	"Zzz_project/controllers"
+	"Zzz_project/controllers/loginSignup"
 	"Zzz_project/models"
 	"github.com/gofiber/fiber/v2"
 )
 
 func AccountHandler(c *fiber.Ctx) error {
-	userID, err := CheckSession(c, Store)
+	userID, err := controllers.CheckSession(c, loginSignup.Store)
 	if err != nil {
 		return err
 	}
@@ -31,7 +33,7 @@ func AccountHandler(c *fiber.Ctx) error {
 }
 
 func UpdateAccountHandler(c *fiber.Ctx) error {
-	userID, err := CheckSession(c, Store)
+	userID, err := controllers.CheckSession(c, loginSignup.Store)
 	if err != nil {
 		return err
 	}
@@ -61,7 +63,7 @@ func ChangePasswordViewHandler(c *fiber.Ctx) error {
 }
 
 func ChangePasswordHandler(c *fiber.Ctx) error {
-	userID, err := CheckSession(c, Store)
+	userID, err := controllers.CheckSession(c, loginSignup.Store)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"success": false,
@@ -92,7 +94,7 @@ func ChangePasswordHandler(c *fiber.Ctx) error {
 	}
 
 	//kiểm tra mật khẩu cũ có đúng không
-	if !CheckPasswordHash(req.CurrentPassword, user.Password) {
+	if !loginSignup.CheckPasswordHash(req.CurrentPassword, user.Password) {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"success": false,
 			"error":   "Incorrect current password",
@@ -123,7 +125,7 @@ func ChangePasswordHandler(c *fiber.Ctx) error {
 	}
 
 	//hash mật khẩu mới và cập nhật vào DB
-	hashedPassword, err := HashPassword(req.NewPassword)
+	hashedPassword, err := loginSignup.HashPassword(req.NewPassword)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"success": false,

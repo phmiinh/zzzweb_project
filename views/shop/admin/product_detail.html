@@ -1,0 +1,69 @@
+<div class="container mt-5">
+    <div class="card-header bg-info text-white rounded-top-4">
+        <h4>Product Detail</h4>
+    </div>
+        <div class="row g-0">
+            <div class="col-md-5">
+                <img src="{{.Product.ImageURL}}" class="img-fluid rounded-start-4" alt="{{.Product.Name}}">
+            </div>
+            <div class="col-md-7">
+                <div class="card-body">
+                    <h3 class="card-title">{{.Product.Name}}</h3>
+                    <h4 class="text-success">${{printf "%.2f" .Product.Price}}</h4>
+                    {{if .Product.OldPrice}}
+                    <h6 class="text-muted text-decoration-line-through">${{printf "%.2f" .Product.OldPrice}}</h6>
+                    {{end}}
+                    <p class="mt-3"><strong>Category:</strong> {{.Product.Category}}</p>
+                    <p><strong>Stock:</strong> {{.Product.Stock}}</p>
+                    <p><strong>Description:</strong></p>
+                    <p>{{.Product.Description}}</p>
+                    <button type="button" class="btn btn-warning mt-3" onclick="toggleEdit()">Edit Product</button>
+                    <a href="/admin/products" class="btn btn-secondary mt-3">Back</a>
+                </div>
+                <!-- FORM EDIT PRODUCT -->
+                <form id="editForm" method="POST" action="/admin/products/edit/{{.Product.ID}}" class="mt-4 d-none">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label>Name</label>
+                            <input type="text" name="name" class="form-control" value="{{.Product.Name}}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Price</label>
+                            <input type="number" name="price" step="0.01" class="form-control" value="{{.Product.Price}}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Old Price</label>
+                            <input type="number" name="old_price" step="0.01" class="form-control" value="{{.Product.OldPrice}}">
+                        </div>
+                        <div class="col-md-6">
+                            <label>Stock</label>
+                            <input type="number" name="stock" class="form-control" value="{{.Product.Stock}}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Category</label>
+                            <input type="text" name="category" class="form-control" value="{{.Product.Category}}">
+                        </div>
+                        <div class="col-12">
+                            <label>Image URL</label>
+                            <input type="text" name="image_url" class="form-control" value="{{.Product.ImageURL}}">
+                        </div>
+                        <div class="col-12">
+                            <label>Description</label>
+                            <textarea name="description" rows="4" class="form-control">{{.Product.Description}}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-success">Save Changes</button>
+                    </div>
+                </form>
+
+                <script>
+                    function toggleEdit() {
+                        document.getElementById("editForm").classList.toggle("d-none");
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

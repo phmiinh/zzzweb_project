@@ -1,0 +1,98 @@
+<div class="card shadow rounded-4">
+    <div class="card-header bg-info text-white rounded-top-4">
+        <h4>Users List</h4>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered rounded shadow-sm">
+            <thead class="table-primary">
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{ range .Users }}
+            <tr>
+                <td>{{ .ID }}</td>
+                <td>{{ .Username }}</td>
+                <td>{{ .Role }}</td>
+                <td>
+                    <a href="/admin/users/{{ .ID }}" class="btn btn-sm btn-info rounded-pill me-1">🔍 Detail</a>
+
+                    <button class="btn btn-sm btn-warning rounded-pill me-1" onclick="openRoleModal({{ .ID }}, '{{ .Role }}')">⚙ Change role</button>
+
+                    <button class="btn btn-sm btn-danger rounded-pill" onclick="openDeleteModal({{ .ID }}, '{{ .Username }}')">🗑 Delete</button>
+                </td>
+            </tr>
+            {{ end }}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal đổi vai trò -->
+<div class="modal fade" id="roleModal" tabindex="-1" aria-labelledby="roleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" id="changeRoleForm">
+            <div class="modal-content rounded-3">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="roleModalLabel">Change role</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Choose new role:</p>
+                    <select name="role" class="form-select rounded">
+                        <option value="customer">Customer</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success rounded-pill">Confirm</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openRoleModal(userId, currentRole) {
+        const form = document.getElementById("changeRoleForm");
+        form.action = `/admin/users/${userId}/change-role`;
+        const select = form.querySelector("select[name='role']");
+        select.value = currentRole;
+        new bootstrap.Modal(document.getElementById('roleModal')).show();
+    }
+</script>
+
+<!-- Modal xác nhận xoá -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" id="deleteUserForm">
+            <div class="modal-content rounded-3">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm to delete user</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure to delete this user <strong id="deleteUsername"></strong>?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger rounded-pill">Delete</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openDeleteModal(userId, username) {
+        document.getElementById("deleteUsername").innerText = username;
+        const form = document.getElementById("deleteUserForm");
+        form.action = `/admin/users/${userId}/delete`;
+        new bootstrap.Modal(document.getElementById('deleteModal')).show();
+    }
+</script>

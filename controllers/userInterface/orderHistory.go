@@ -1,6 +1,7 @@
-package controllers
+package userInterface
 
 import (
+	"Zzz_project/controllers/loginSignup"
 	"Zzz_project/models"
 	"github.com/gofiber/fiber/v2"
 	"log"
@@ -9,7 +10,7 @@ import (
 // OrderHistory handler to show user's order history
 func OrderHistory(c *fiber.Ctx) error {
 	// Get the session and user_id
-	sess, err := Store.Get(c)
+	sess, err := loginSignup.Store.Get(c)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Session error"})
 	}
